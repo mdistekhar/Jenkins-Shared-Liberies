@@ -1,0 +1,91 @@
+pipeline {
+    agent { label 'vinod' }
+
+    environment {
+        APP_NAME = "blinkit-clone"
+        IMAGE_TAG = "1.0"
+    }
+
+    stages {
+
+        stage('Cleanup Old Containers') {
+            steps {
+                echo "Cleaning old containers and images"
+                sh '''
+                docker-compose down || true
+                docker rm -f blinkit-clone-app || true
+                docker rmi blinkit-clone:1.0 || true
+                '''
+            }
+        }
+
+        stage('Clone Code') {
+            steps {
+                echo "Cloning repository"
+                git url: "https://github.com/mdistekhar/Blinkit-Clone", branch: "main"
+            }
+        }
+
+        stage('Build Image') {
+            steps {
+                echo "Building Docker image"
+                sh 'docker-compose build'
+            }
+        }
+
+        stage('Push Image to Docker Hub') {
+            steps {
+                echo "Pushing image to Docker Hub"
+
+                withCredentials([
+                    usernamePassword(
+                        credentialsId: 'dockerHubCred',
+                        usernameVariable: 'dockerHubUser',
+                        passwordVariable: 'dockerHubPass'
+                    )
+                ]) {
+                    sh '''
+                    docker login -u $dockerHubUser -p $dockerHubPass
+                    docker tag blinkit-clone:1.0 $dockerHubUser/blinkit-clone:1.0
+                    docker push $dockerHubUser/blinkit-clone:1.0
+                    '''
+                }
+
+                echo "Image pushed successfully to Docker Hub"
+            }
+        }
+
+        stage('Deploy Application') {
+            steps {
+                echo "Deploying application"
+                sh 'docker-compose up -d'
+            }
+        }
+
+        stage('Health Check') {
+            steps {
+                echo "Checking application health"
+                sh '''
+                sleep 20
+                curl -f http://localhost:8080 || exit 1
+                '''
+            }
+        }
+
+        stage('Post Deployment Status') {
+            steps {
+                echo "Deployment status"
+                sh 'docker ps'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "Pipeline executed successfully"
+        }
+        failure {
+            echo "Pipeline failed"
+        }
+    }
+}
