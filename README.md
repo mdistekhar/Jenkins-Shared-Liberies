@@ -46,6 +46,7 @@ Once configured, Jenkins pipelines can reuse functions from this library.
 
 ## How To Set Up Webhook :-
 
-To use the shared library in a pipeline:
+<img width="1477" height="913" alt="Screenshot 2026-03-13 005625" src="https://github.com/user-attachments/assets/8d9a7e97-21f3-4e05-b8e9-b8ea5830aa70" />
+
 
 ```
