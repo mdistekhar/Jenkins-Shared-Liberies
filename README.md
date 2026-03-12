@@ -40,3 +40,12 @@ The shared library must be configured in **Jenkins → Manage Jenkins → Config
 * **Source Code Management:** Git repository containing this library
 
 Once configured, Jenkins pipelines can reuse functions from this library.
+
+    └── config.yaml         # Optional resource files
+```
+
+## How To Set Up Webhook :-
+
+To use the shared library in a pipeline:
+
+```
