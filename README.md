@@ -48,5 +48,13 @@ Once configured, Jenkins pipelines can reuse functions from this library.
 
 <img width="1477" height="913" alt="Screenshot 2026-03-13 005625" src="https://github.com/user-attachments/assets/8d9a7e97-21f3-4e05-b8e9-b8ea5830aa70" />
 
+```
+
+```
+
+## Then add in Pipelines  :-
+
+ 
+<img width="1200" height="103" alt="image" src="https://github.com/user-attachments/assets/3c30f9e5-b3c2-462e-9925-b064ff9200e0" />
 
 ```
